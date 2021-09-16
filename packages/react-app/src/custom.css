@@ -1,0 +1,138 @@
+* {
+  font-size: small;
+}
+
+.withoutBorder {
+  font-size: 0px;
+}
+
+.boots {
+  box-sizing: border-box !important;
+}
+
+.nes-list.is-circle li::before {
+  color: white;
+}
+
+.nes-list.is-circle li {
+  font-size: 10px;
+}
+
+.nes-container.with-title>.title {
+  margin: -1.9rem 0 1rem;
+}
+
+.Toastify__toast-body {
+  font-size: 12px;
+}
+
+.bubbleTextTutorial {
+  width: 210px;
+  margin-bottom: 150px;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-direction: column;
+  height: 100%;
+  min-height: 180px;
+  overflow-wrap: break-word;
+}
+.textTutorial {
+  font-size: 16px;
+}
+
+button,
+.web3modal-provider-wrapper {
+  font-size: 10px;
+  cursor: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAzElEQVRYR+2X0Q6AIAhF5f8/2jYXZkwEjNSVvVUjDpcrGgT7FUkI2D9xRfQETwNIiWO85wfINfQUEyxBG2ArsLwC0jioGt5zFcwF4OYDPi/mBYKm4t0U8ATgRm3ThFoAqkhNgWkA0jJLvaOVSs7j3qMnSgXWBMiWPXe94QqMBMBc1VZIvaTu5u5pQewq0EqNZvIEMCmxAawK0DNkay9QmfFNAJUXfgGgUkLaE7j/h8fnASkxHTz0DGIBMCnBeeM7AArpUd3mz2x3C7wADglA8BcWMZhZAAAAAElFTkSuQmCC) 14 0,pointer !important;
+}
+
+.acknowledgments p{
+  font-size: 8px;
+  margin: 5px;
+}
+
+.acknowledgments p a{
+  font-size: 8px;
+}
+
+.hide {
+  display: none;
+}
+
+.blink {
+  animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
+
+.web3modal-modal-card {
+  max-width: unset !important;
+}
+
+.walletconnect-modal__base {
+  max-width: 200px !important;
+}
+
+.nes-table.is-dark::before {
+  position: unset;
+}
+
+
+
+.transitionImage {
+  animation: move .5s linear;
+}
+
+@keyframes move {
+  0% {
+    opacity: 0;
+    filter: blur(10px);
+  }
+  25% {
+    transform: translateX(10px);
+  }
+  50% {
+    transform: translateX(-10px);
+  }
+  75% {
+    transform: translateX(10px);
+  }
+  100% {
+    transform: translateX(0px);
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+.transitionText {
+  animation: show 1.5s linear;
+}
+
+@keyframes show {
+  0% {
+    filter: blur(10px);
+    opacity: 0;
+    transform: scale(0);
+  }
+  75% {
+    filter: blur(10px);
+    opacity: 0;
+    transform: scale(.2) translateX(-300px) scaleX(0);
+  }
+  90% {
+    filter: blur(0);
+    opacity: 1;
+    transform: scale(1.1) translateX(0px) scaleX(1);
+  }
+  95% {
+    transform: scale(.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
