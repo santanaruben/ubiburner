@@ -99,7 +99,7 @@ export default function Acknowledgments() {
           ❤️
         </span>{" "}
         by{" "}
-        <Link href="https://rubensantana.ga" style={{ fontSize: "10px" }}>
+        <Link href="https://ruben.to" style={{ fontSize: "10px" }}>
           Ruben Santana
         </Link>
       </p>
