@@ -1,135 +1,64 @@
-This project was bootstrapped with [Create Eth App](https://github.com/paulrberg/create-eth-app).
+<h1 align="center">
+  <br>
+  <a href="https://ubiburner.com"><img style="margin-left:35px; margin-bottom:-20px" src="https://raw.githubusercontent.com/santanaruben/ubiburner/main/packages/react-app/public/flame.png" alt="ubiburner" width="200"></a>
+  <h2 align="center">UBI Burner</h2>
+</h1>
 
-## Project Structure
+<h4 align="center">Send ETH, burn UBI, help humanity.</h4>
 
-The default template is a monorepo created with [Yarn Workspaces](https://classic.yarnpkg.com/en/docs/workspaces/).
+<h5 align="center">Built using</h5>
+<p align="center">
+    <img src="https://img.shields.io/badge/solidity-0.8.17-black?style=flat&logo=solidity">
+    <img src="https://img.shields.io/badge/react-black?style=flat&logo=react">
+    <img src="https://img.shields.io/badge/nes.css-black?style=flat">
+</p>
 
-Workspaces makes it possible to setup multiple packages in such a way that we only need to run `yarn install` once to install all of them in
-a single pass. Dependencies are hoisted at the root.
+<h5 align="center">Follow</h5>
+<p align="center">
+<a href="https://github.com/santanaruben/ubiburner"><img src="https://img.shields.io/badge/github-black?style=flat&logo=github"></a>
+  <a href="https://t.me/ubiburner"><img src="https://img.shields.io/badge/telegram-blue?style=flat&logo=telegram"></a>
+  <a href="https://twitter.com/ubiburner">
+      <img src="https://img.shields.io/badge/twitter-lightblue?style=flat&logo=twitter"/>
+  </a>
+</p>
 
-```
-my-eth-app
-├── README.md
-├── node_modules
-├── package.json
-├── .gitignore
-└── packages
-    ├── contracts
-    │   ├── README.json
-    │   ├── package.json
-    │   └── src
-    │       ├── abis
-    │       │   ├── erc20.json
-    │       │   └── ownable.json
-    │       ├── addresses.js
-    │       └── index.js
-    ├── react-app
-    │   ├── README.md
-    │   ├── node_modules
-    │   ├── package.json
-    │   ├── public
-    │   │   ├── favicon.ico
-    │   │   ├── index.html
-    │   │   ├── logo192.png
-    │   │   ├── logo512.png
-    │   │   ├── manifest.json
-    │   │   └── robots.txt
-    │   └── src
-    │       ├── App.css
-    │       ├── App.js
-    │       ├── App.test.js
-    │       ├── ethereumLogo.svg
-    │       ├── index.css
-    │       ├── index.js
-    │       ├── serviceWorker.js
-    │       └── setupTests.js
-    └── subgraph
-        ├── README.md
-        ├── abis
-        │   └── erc20.json
-        ├── package.json
-        ├── schema.graphql
-        ├── src
-        │   └── mappings
-        │       ├── tokens.ts
-        │       └── transfers.ts
-        └── subgraph.yaml
-```
+<p align="center">
+  <a href="#contract">Contract</a> •
+  <a href="#contribute">Contribute</a> •
+  <a href="#logic">Logic</a> •
+  <a href="#reasoning">Reasoning</a> •
+  <a href="#related">Related</a> •
+  <a href="#license">License</a>
+</p>
 
-Owing to this dependency on Yarn Workspaces, Create Eth App can't be used with npm.
+## Contract
 
-## Available Scripts
+- See the <a href="https://etherscan.io/address/0x481B24Ed5feAcB37e282729b9815e27529Cf9ae2#contracts">contract</a> in etherscan.
 
-In the project directory, you can run:
+## Contribute
 
-### React App
+- If you want to contribute, you can orient some smart contract fees or just send ETH to this address <b>0x481B24Ed5feAcB37e282729b9815e27529Cf9ae2</b>.
 
-#### `yarn react-app:start`
+## Logic
 
-Runs the React app in development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- The contract receives ETH.
 
-The page will automatically reload if you make changes to the code.<br>
-You will see the build errors and lint warnings in the console.
+- That ETH is used to buy UBI from Uniswap.
 
-#### `yarn react-app:test`
+- UBI that is purchased, is trapped in the contract forever.
 
-Runs the React test watcher in an interactive mode.<br>
-By default, runs tests related to files changed since the last commit.
+- Therefore those UBIs are considered burned.
 
-[Read more about testing React.](https://facebook.github.io/create-react-app/docs/running-tests)
+## Reasoning
 
-#### `yarn react-app:build`
+- If a contract does not have a built-in way to send funds from it (like a function that could transfer a token), there is no way to retrieve that token from the contract. You can check it in <a href="https://ethereum.stackexchange.com/questions/34559/i-accidentally-sent-a-token-to-a-token-contract-can-i-get-it-back">this</a> and other StackExchange questions.
 
-Builds the React app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Related
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+[Proof of Humanity](https://proofofhumanity.id)
+•
+[UBI](https://democracy.earth)
 
-See the React documentation on [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## License
 
-#### `yarn react-app:eject`
-
-**Note: this is a one-way operation. Once you `react-app:eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` the React app at any time. This command will
-remove the single build dependency from your React package.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right
-into the `react-app` package so you have full control over them. All of the commands except `react-app:eject` will still work,
-but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `react-app:eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-### Subgraph
-
-The Graph is a tool for for indexing events emitted on the Ethereum blockchain. It provides you with an easy-to-use GraphQL API. <br/>
-
-To learn more, check out the [The Graph documentation](https://thegraph.com/docs).
-
-#### `yarn subgraph:codegen`
-
-Generates AssemblyScript types for smart contract ABIs and the subgraph schema.
-
-#### `yarn subgraph:build`
-
-Compiles the subgraph to WebAssembly.
-
-#### `yarn subgraph:auth`
-
-Before deploying your subgraph, you need to sign up on the
-[Graph Explorer](https://thegraph.com/explorer/). There, you will be given an access token. Drop it in the command
-below:
-
-```sh
-GRAPH_ACCESS_TOKEN=your-access-token-here yarn subgraph:auth
-```
-
-#### `yarn subgraph:deploy`
-
-Deploys the subgraph to the official Graph Node.<br/>
-
-Replace `paulrberg/create-eth-app` in the package.json script with your subgraph's name.
-
-You may also want to [read more about the hosted service](https://thegraph.com/docs/quick-start#hosted-service).
+MIT
