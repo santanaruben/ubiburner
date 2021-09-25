@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <a href="https://ubiburner.com"><img style="margin-left:35px; margin-bottom:-20px" src="https://raw.githubusercontent.com/santanaruben/ubiburner/main/packages/react-app/public/flame.png" alt="ubiburner" width="200"></a>
+  <a href="https://ubiburner.com"><img style="margin-left:65px; margin-bottom:-20px" src="https://raw.githubusercontent.com/santanaruben/ubiburner/main/packages/react-app/public/flame.png" alt="ubiburner" width="200"></a>
   <h2 align="center">UBI Burner</h2>
 </h1>
 
