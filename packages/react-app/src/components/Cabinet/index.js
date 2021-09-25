@@ -74,12 +74,13 @@ export default function Cabinet() {
       </div>
       <footer>
         <h3>
-          Connect your wallet and <span style={{fontSize: "unset"}}>help humanity</span>
+          Connect your wallet and{" "}
+          <span style={{ fontSize: "unset" }}>help humanity</span>
         </h3>
         <h4>
           Contribute sending ETH to{" "}
           <Link
-            href="https://kovan.etherscan.io/address/0x595767572b565Bb289dBE313AdBEF3Bfa3e680c3#code"
+            href="https://etherscan.io/address/0x481b24ed5feacb37e282729b9815e27529cf9ae2#code"
             target="blank"
           >
             this contract

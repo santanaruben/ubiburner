@@ -1,5 +1,21 @@
 [
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_burner2",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_burner3",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
     "anonymous": false,
     "inputs": [
       {
@@ -22,7 +38,13 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
+        "indexed": false,
+        "internalType": "address",
+        "name": "requester",
+        "type": "address"
+      },
+      {
+        "indexed": false,
         "internalType": "address",
         "name": "burner",
         "type": "address"
@@ -31,6 +53,12 @@
         "indexed": false,
         "internalType": "uint256",
         "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "burned",
         "type": "uint256"
       }
     ],
@@ -101,6 +129,19 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "UBIburned",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -112,77 +153,6 @@
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_requester",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_burnerToRemove",
-        "type": "address"
-      }
-    ],
-    "name": "deleteBurnerAccepted",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_burnerToAdd",
-        "type": "address"
-      }
-    ],
-    "name": "requestBurnerAdd",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_burnerToRemove",
-        "type": "address"
-      }
-    ],
-    "name": "requestBurnerRemoval",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "requestBurnUBI",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "stateMutability": "payable",
-    "type": "receive"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_burner2",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_burner3",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
   },
   {
     "inputs": [],
@@ -208,6 +178,24 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_requester",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_burnerToRemove",
+        "type": "address"
+      }
+    ],
+    "name": "deleteBurnerAccepted",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -243,6 +231,26 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "requestBurnUBI",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_burnerToAdd",
+        "type": "address"
+      }
+    ],
+    "name": "requestBurnerAdd",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -270,6 +278,19 @@
     "inputs": [
       {
         "internalType": "address",
+        "name": "_burnerToRemove",
+        "type": "address"
+      }
+    ],
+    "name": "requestBurnerRemoval",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "",
         "type": "address"
       },
@@ -291,16 +312,7 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "UBIburned",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
+    "stateMutability": "payable",
+    "type": "receive"
   }
 ]

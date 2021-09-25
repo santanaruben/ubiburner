@@ -22,10 +22,10 @@ import CurrentBurnRequest from "./components/Balances/CurrentBurnRequest";
 
 var notify = Notify({
   dappId: process.env.REACT_APP_BLOCKNATIVE, // [String] Blocknative API key
-  networkId: 42, // [Integer] The Ethereum network ID your Dapp uses.
+  networkId: 1, // [Integer] The Ethereum network ID your Dapp uses.
 });
 
-const CONTRACT_BLOCK = 26738534;
+const CONTRACT_BLOCK = 13293731;
 
 function WalletButton({ provider, loadWeb3Modal, logoutOfWeb3Modal }) {
   return (
@@ -51,7 +51,7 @@ function App() {
   const ETHERSCAN_API = process.env.ETHERSCAN_API;
   const INFURA_ID = process.env.REACT_APP_INFURA_ID;
   const ALCHEMY_API = process.env.REACT_APP_ALCHEMY_API;
-  const defaultProvider = ethers.getDefaultProvider("kovan", {
+  const defaultProvider = ethers.getDefaultProvider("mainnet", {
     etherscan: ETHERSCAN_API,
     infura: INFURA_ID,
     alchemy: ALCHEMY_API,

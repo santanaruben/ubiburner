@@ -9,8 +9,8 @@ import WalletConnectProvider from "@walletconnect/web3-provider";
 //https://kovan.infura.io/v3/
 const INFURA_ID = process.env.REACT_APP_INFURA_ID;
 
-// const NETWORK_NAME = "mainnet";
-const NETWORK_NAME = "kovan";
+const NETWORK_NAME = "mainnet";
+// const NETWORK_NAME = "kovan";
 
 function useWeb3Modal(config = {}) {
   const [provider, setProvider] = useState();
