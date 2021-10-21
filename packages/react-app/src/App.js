@@ -185,8 +185,6 @@ function App() {
         obj2.push({ from: prop, amount: holder[prop] });
       }
       obj2.sort((a, b) => Number(b.amount) - Number(a.amount));
-      console.log(obj2);
-      // obj2.sort((a, b) => (Number(b.amount) > Number(a.amount) ? 0 : -1));
       setContributors(obj2);
     }
     start();
