@@ -22,7 +22,7 @@ export default function AmountToBurn(props) {
           className="title"
           title="If you want to contribute, send only ETH to this address"
         >
-          You could burn
+          The protocol can burn
         </p>
         {/* <p style={{ marginBottom: "0px" }}>{props.children}</p> */}
         <br />

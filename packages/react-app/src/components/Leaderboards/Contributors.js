@@ -36,7 +36,7 @@ export default function Contributors(props) {
                 return (
                   <tr key={i}>
                     <td>{b.from}</td>
-                    <td>{ethers.utils.formatEther(b.amount)} ETH</td>
+                    <td>{ethers.utils.formatEther(String(b.amount))} ETH</td>
                   </tr>
                 );
               })}

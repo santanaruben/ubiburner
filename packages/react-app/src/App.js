@@ -20,12 +20,18 @@ import { toast, Bounce } from "react-toastify";
 import AmountToBurn from "./components/Balances/AmountToBurn";
 import CurrentBurnRequest from "./components/Balances/CurrentBurnRequest";
 
+// const path = require("path");
+// require("dotenv").config({
+//   path: path.resolve(__dirname, ".env"),
+// });
+
 var notify = Notify({
   dappId: process.env.REACT_APP_BLOCKNATIVE, // [String] Blocknative API key
   networkId: 1, // [Integer] The Ethereum network ID your Dapp uses.
 });
 
-const CONTRACT_BLOCK = 13293731;
+const CONTRACT_BLOCK = 13293731; //mainnet
+//const CONTRACT_BLOCK = 27378706; //kovan
 
 function WalletButton({ provider, loadWeb3Modal, logoutOfWeb3Modal }) {
   return (
@@ -51,6 +57,7 @@ function App() {
   const ETHERSCAN_API = process.env.ETHERSCAN_API;
   const INFURA_ID = process.env.REACT_APP_INFURA_ID;
   const ALCHEMY_API = process.env.REACT_APP_ALCHEMY_API;
+  // const defaultProvider = ethers.getDefaultProvider("kovan", {
   const defaultProvider = ethers.getDefaultProvider("mainnet", {
     etherscan: ETHERSCAN_API,
     infura: INFURA_ID,
@@ -178,6 +185,8 @@ function App() {
         obj2.push({ from: prop, amount: holder[prop] });
       }
       obj2.sort((a, b) => Number(b.amount) - Number(a.amount));
+      console.log(obj2);
+      // obj2.sort((a, b) => (Number(b.amount) > Number(a.amount) ? 0 : -1));
       setContributors(obj2);
     }
     start();
@@ -241,6 +250,8 @@ function App() {
   }, [provider]);
 
   async function requestBurnUBI() {
+    let a = process.env;
+    console.log(a);
     const contractWithSigner = await contractUBIburner.connect(signer);
     const tx = await contractWithSigner.requestBurnUBI();
     console.log(tx);
@@ -294,33 +305,43 @@ function App() {
         let AmountOut = await updateAmountOutMin();
         setBalances({ ...balances, ETH: ETHbalance, AmountOutMin: AmountOut });
       });
-      contractUBIburner.on("Burned", async (from, amount) => {
-        console.log(
-          "Burned.\nFrom: " +
-            from +
-            ".\nAmount: " +
-            ethers.utils.formatEther(amount)
-        );
-        toastNotification(
-          "Burned.\nFrom: " +
-            from +
-            ".\nAmount: " +
-            ethers.utils.formatEther(amount) +
-            "ETH",
-          5000
-        );
-        await delay(10000);
-        let ETHbalance = await updateContractBalance();
-        let UBIbalance = await updateUBIburned();
-        let AmountOut = await updateAmountOutMin();
-        setBalances({
-          UBI: UBIbalance,
-          ETH: ETHbalance,
-          AmountOutMin: AmountOut,
-        });
-        let values = await getCurrentRequest();
-        setCurrentBurnRequest({ amount: values[0], requester: values[1] });
-      });
+      contractUBIburner.on(
+        "Burned",
+        async (requester, burner, amount, burned) => {
+          console.log(
+            "Some UBIs have been Burned.\nRequester:" +
+              requester +
+              "\nBurner: " +
+              burner +
+              ".\nAmount: " +
+              ethers.utils.formatEther(amount) +
+              ".\nBurned: " +
+              ethers.utils.formatEther(burned)
+          );
+          toastNotification(
+            "Some UBIs have been Burned.\nRequester:" +
+              requester +
+              "\nBurner: " +
+              burner +
+              ".\nAmount: " +
+              ethers.utils.formatEther(amount) +
+              ".\nBurned: " +
+              ethers.utils.formatEther(burned),
+            5000
+          );
+          await delay(10000);
+          let ETHbalance = await updateContractBalance();
+          let UBIbalance = await updateUBIburned();
+          let AmountOut = await updateAmountOutMin();
+          setBalances({
+            UBI: UBIbalance,
+            ETH: ETHbalance,
+            AmountOutMin: AmountOut,
+          });
+          let values = await getCurrentRequest();
+          setCurrentBurnRequest({ amount: values[0], requester: values[1] });
+        }
+      );
 
       contractUBIburner.on("BurnUBIRequested", async (requester, UBIAmount) => {
         console.log(
@@ -400,61 +421,63 @@ function App() {
 
                 {/* Burner zone */}
 
-                {isBurner && currentBurnRequest && (
-                  <>
-                    <br />
-                    <div className="container-fluid boots">
+                <>
+                  <br />
+                  <div className="container-fluid boots">
+                    <div
+                      className="row justify-content-md-center"
+                      style={{ textAlign: "center" }}
+                    >
                       <div
-                        className="row justify-content-md-center"
-                        style={{ textAlign: "center" }}
+                        className="col-12 col-md boots"
+                        style={{ marginBottom: "25px" }}
                       >
-                        <div
-                          className="col-12 col-md-6 boots"
-                          style={{ marginBottom: "25px" }}
-                        >
-                          <AmountToBurn data={balances.AmountOutMin} />
-                        </div>
-
-                        <div className="col-12 col-md-6 boots">
-                          <CurrentBurnRequest data={currentBurnRequest}>
-                            {balances.ETH !== "0.0" ? (
-                              <button
-                                type="button"
-                                className="nes-btn nes-pointer"
-                                onClick={() => requestBurnUBI()}
-                              >
-                                Make or Update a Burn Request
-                              </button>
-                            ) : (
-                              <>
-                                Come back when the contract has ETH to make a
-                                burn request.
-                              </>
-                            )}
-                          </CurrentBurnRequest>
-                        </div>
-
-                        {currentBurnRequest.amount !== "0.0" && (
-                          <center>
-                            <br />
-                            <button
-                              className="push--skeuo nes-pointer"
-                              onClick={() => burnUBI()}
-                            ></button>
-                            <p style={{ textAlign: "center" }}>
-                              If you're not the requester press the button to
-                              burn UBIs{" "}
-                              <span role="img" aria-label="emoji">
-                                🔥
-                              </span>
-                            </p>
-                            <br />
-                          </center>
-                        )}
+                        <AmountToBurn data={balances.AmountOutMin} />
                       </div>
+
+                      {isBurner && currentBurnRequest && (
+                        <>
+                          <div className="col-12 col-md-6 boots">
+                            <CurrentBurnRequest data={currentBurnRequest}>
+                              {balances.ETH !== "0.0" ? (
+                                <button
+                                  type="button"
+                                  className="nes-btn nes-pointer"
+                                  onClick={() => requestBurnUBI()}
+                                >
+                                  Make or Update a Burn Request
+                                </button>
+                              ) : (
+                                <>
+                                  Come back when the contract has ETH to make a
+                                  burn request.
+                                </>
+                              )}
+                            </CurrentBurnRequest>
+                          </div>
+
+                          {currentBurnRequest.amount !== "0.0" && (
+                            <center>
+                              <br />
+                              <button
+                                className="push--skeuo nes-pointer"
+                                onClick={() => burnUBI()}
+                              ></button>
+                              <p style={{ textAlign: "center" }}>
+                                If you're not the requester press the button to
+                                burn UBIs{" "}
+                                <span role="img" aria-label="emoji">
+                                  🔥
+                                </span>
+                              </p>
+                              <br />
+                            </center>
+                          )}
+                        </>
+                      )}
                     </div>
-                  </>
-                )}
+                  </div>
+                </>
 
                 <br />
                 {contributors && (
