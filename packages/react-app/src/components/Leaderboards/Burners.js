@@ -33,7 +33,7 @@ export default function Burners(props) {
             <tbody>
               {
                 // pushers &&
-                props.items.slice(0, 10).map((b, i) => {
+                props.items.map((b, i) => {
                   return (
                     <tr key={i}>
                       <td>{b.from}</td>
