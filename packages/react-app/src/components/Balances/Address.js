@@ -23,14 +23,6 @@ export default function Address(props) {
         >
           Contract address
         </p>
-        <Link
-          href={
-            "https://etherscan.io/enslookup-search?search=ubi.eth"
-          }
-        >
-          UBI.eth
-        </Link>
-        <br /><br />
         <p style={{ marginBottom: "0px" }}>{props.children}</p>
         <br />
         <p style={{ marginBottom: "0px" }}>

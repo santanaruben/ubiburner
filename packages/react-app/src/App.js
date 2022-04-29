@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import { ethers } from "ethers";
-import { shortenAddress, useCall, useEthers, useLookupAddress } from "@usedapp/core";
 import { Body, Header } from "./components";
 import useWeb3Modal from "./hooks/useWeb3Modal";
 import { addresses, abis } from "@project/contracts";
@@ -35,80 +34,23 @@ const CONTRACT_BLOCK = 13293731; //mainnet
 //const CONTRACT_BLOCK = 27378706; //kovan
 
 function WalletButton({ provider, loadWeb3Modal, logoutOfWeb3Modal }) {
-
-  const [rendered, setRendered] = useState("");
-
-  const ens = useLookupAddress();
-  const { account, activateBrowserWallet, deactivate, error } = useEthers();
-
-  useEffect(() => {
-    if (ens) {
-      setRendered(ens);
-    } else if (account) {
-      setRendered(shortenAddress(account));
-    } else {
-      setRendered("");
-    }
-  }, [account, ens, setRendered]);
-
-  useEffect(() => {
-    if (error) {
-      console.error("Error while connecting wallet:", error.message);
-    }
-  }, [error]);
-
   return (
-    // <button
-    // type="button"
-    // className="nes-btn nes-pointer"
-    //   onClick={() => {
-    //     if (!account) {
-    //       loadWeb3Modal()
-    //       // activateBrowserWallet();
-    //     } else {
-    //       logoutOfWeb3Modal();
-    //     }
-    //   }}
-    //   style={{ height: "30px" }}
-    // >
     <button
       type="button"
       className="nes-btn nes-pointer"
-      onClick={async () => {
+      onClick={() => {
         if (!provider) {
-          await loadWeb3Modal();
-          await activateBrowserWallet();
+          loadWeb3Modal();
         } else {
-          deactivate();
           logoutOfWeb3Modal();
         }
       }}
       style={{ height: "30px" }}
-      title={rendered === "" ? "Click to Connect" : "Disconnect Wallet"}
     >
-      {rendered === "" && "Connect Wallet"}
-      {rendered !== "" && rendered}
+      {!provider ? "Connect Wallet" : "Disconnect Wallet"}
     </button>
   );
 }
-// function WalletButton({ provider, loadWeb3Modal, logoutOfWeb3Modal }) {
-//   return (
-//     <button
-//       type="button"
-//       className="nes-btn nes-pointer"
-//       onClick={() => {
-//         if (!provider) {
-//           loadWeb3Modal();
-//         } else {
-//           logoutOfWeb3Modal();
-//         }
-//       }}
-//       style={{ height: "30px" }}
-//     >
-//       {!provider ? "Connect Wallet" : "Disconnect Wallet"}
-//     </button>
-//   );
-// }
 
 function App() {
   // const { loading, error, data } = useQuery(GET_TRANSFERS);
@@ -240,20 +182,10 @@ function App() {
       });
       var obj2 = [];
       for (var prop in holder) {
-        // let ens = await provider.lookupAddress(prop);
-        // obj2.push({ from: ens, amount: holder[prop] });
         obj2.push({ from: prop, amount: holder[prop] });
       }
       obj2.sort((a, b) => Number(b.amount) - Number(a.amount));
-      
-      let onlyTen = obj2.slice(0, 21);
-
-      onlyTen.forEach(async function (d) {
-        let ens = await provider.lookupAddress(d.from);
-        if (ens) d.from = ens;
-      })
-
-      setContributors(onlyTen);
+      setContributors(obj2);
     }
     start();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -277,12 +209,6 @@ function App() {
         return { from: String(key), quantity: result[key] };
       });
       res.sort((a, b) => Number(b.quantity) - Number(a.quantity));
-
-      res.forEach(async function (d) {
-        let ens = await provider.lookupAddress(d.from);
-        if (ens) d.from = ens;
-      })
-
       setBurners(res);
     }
     start();

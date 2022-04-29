@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import MyErrorBoundary from "./Errors/MyErrorBoundary";
-import { DAppProvider, Mainnet } from "@usedapp/core";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 // import ApolloClient from "apollo-boost";
@@ -19,21 +18,11 @@ import App from "./App";
 //   uri: "https://api.thegraph.com/subgraphs/name/paulrberg/create-eth-app",
 // });
 
-const INFURA_PROJECT_ID = "defba93b47f748f09fcead8282b9e58e";
-const config = {
-  readOnlyChainId: Mainnet.chainId,
-  readOnlyUrls: {
-    [Mainnet.chainId]: "https://mainnet.infura.io/v3/" + INFURA_PROJECT_ID,
-  },
-}
-
 ReactDOM.render(
   // <ApolloProvider client={client}>
   <MyErrorBoundary>
     <ToastContainer />
-    <DAppProvider config={config}>
-      <App />
-    </DAppProvider>
+    <App />
   </MyErrorBoundary>,
   // </ApolloProvider>,
   document.getElementById("root")
