@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { ethers } from "ethers";
-import { shortenAddress, useCall, useEthers, useLookupAddress } from "@usedapp/core";
+import { shortenAddress, useEthers, useLookupAddress } from "@usedapp/core";
 import { Body, Header } from "./components";
 import useWeb3Modal from "./hooks/useWeb3Modal";
 import { addresses, abis } from "@project/contracts";
