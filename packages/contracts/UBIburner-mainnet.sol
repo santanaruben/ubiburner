@@ -9,7 +9,7 @@ pragma solidity ^0.8;
 
 /**
  * @title UniswapV2Router Interface
- * @dev See https://uniswap.org/docs/v2/smart-contracts/router02/#swapexactethfortokens. This will allow us to import swapExactETHForTokens function into our contract and the getAmountsOut function to calculate the token amount we will swap
+ * @dev See https://uniswap.org/docs/v2/smart-contracts/router02/#swapexactethfortokens. This will allow us to import swapExactETHForTokens and swapExactTokensForTokens functions into our contract, also the getAmountsOut function to calculate the token amount we will swap
  */
 interface IUniswapV2Router {
     function swapExactETHForTokens(
@@ -193,12 +193,14 @@ contract UBIburner {
 
     /** @dev Using the parameters stored by the requester, this function swaps the ETH contract balance for UBI and freezes on this contract.
      *  @param _deadline Unix timestamp after which the transaction will revert.
+     *  @param _slippageDivisor Value to calculate the slippage tolerance. 100 = 1%, 500 = 0,2%, 1000 = 0,1%.
      */
-    function burnUBI(uint256 _deadline) external onlyBurner {
+    function burnUBI(uint256 _deadline, uint256 _slippageDivisor) external onlyBurner {
         uint256 _balanceToBurn = address(this).balance;
         uint256 _amountOutMin = currentAmountOutMin;
+        require(_slippageDivisor >= 100, "Max 1% slippage tolerance");
         // 0.1% less to avoid tx failure due to price decrease between request and approval
-        uint256 _amountOutMinToUse = _amountOutMin - (_amountOutMin / 1000);
+        uint256 _amountOutMinToUse = _amountOutMin - (_amountOutMin / _slippageDivisor);
         address _burnRequester = currentBurnRequester;
         require(_burnRequester != msg.sender && _burnRequester != address(0));
         currentAmountOutMin = 0;
@@ -216,12 +218,14 @@ contract UBIburner {
     /** @dev Using the parameters stored by the requester, this function swaps one of the tokens from the contract balance for UBI and freezes on this contract.
      *  @param _token Entry token, used to swap for UBI.
      *  @param _deadline Unix timestamp after which the transaction will revert.
+     *  @param _slippageDivisor Value to calculate the slippage tolerance. 100 = 1%, 500 = 0,2%, 1000 = 0,1%.
      */
-    function burnUBIwithTOKEN(address _token, uint256 _deadline) external onlyBurner {
+    function burnUBIwithTOKEN(address _token, uint256 _deadline, uint256 _slippageDivisor) external onlyBurner {
         uint256 _balanceToBurn = IERC20(_token).balanceOf(address(this));
         uint256 _amountOutMinToken = currentAmountOutMinToken[_token];
+        require(_slippageDivisor >= 100, "Max 1% slippage tolerance");
         // 0.1% less to avoid tx failure due to price decrease between request and approval
-        uint256 _amountOutMinToUseToken = _amountOutMinToken - (_amountOutMinToken / 1000);
+        uint256 _amountOutMinToUseToken = _amountOutMinToken - (_amountOutMinToken / _slippageDivisor);
         address _burnRequester = currentBurnRequester;
         require(_burnRequester != msg.sender && _burnRequester != address(0));
         address[] memory _path;

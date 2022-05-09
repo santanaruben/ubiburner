@@ -49,7 +49,8 @@ interface IUniswapV2Router {
 
 /**
  * @title IERC20 Interface
- * @dev "balanceOf" to see the token balances of our contract. And "approve", to allow the uniswap contract to spend the tokens
+ * @dev balanceOf: This will allow us to see the token balances of our contract
+ * @dev approve: Allow the uniswap contract to spend the tokens in this contract 
  */
 interface IERC20 {
     function balanceOf(address _owner) external view returns (uint256);
@@ -192,12 +193,14 @@ contract UBIburner {
 
     /** @dev Using the parameters stored by the requester, this function swaps the ETH contract balance for UBI and freezes on this contract.
      *  @param _deadline Unix timestamp after which the transaction will revert.
+     *  @param _slippageDivisor Value to calculate the slippage tolerance. 100 = 1%, 500 = 0,2%, 1000 = 0,1%.
      */
-    function burnUBI(uint256 _deadline) external onlyBurner {
+    function burnUBI(uint256 _deadline, uint256 _slippageDivisor) external onlyBurner {
         uint256 _balanceToBurn = address(this).balance;
         uint256 _amountOutMin = currentAmountOutMin;
+        require(_slippageDivisor >= 100, "Max 1% slippage tolerance");
         // 0.1% less to avoid tx failure due to price decrease between request and approval
-        uint256 _amountOutMinToUse = _amountOutMin - (_amountOutMin / 1000);
+        uint256 _amountOutMinToUse = _amountOutMin - (_amountOutMin / _slippageDivisor);
         address _burnRequester = currentBurnRequester;
         require(_burnRequester != msg.sender && _burnRequester != address(0));
         currentAmountOutMin = 0;
@@ -215,12 +218,14 @@ contract UBIburner {
     /** @dev Using the parameters stored by the requester, this function swaps one of the tokens from the contract balance for UBI and freezes on this contract.
      *  @param _token Entry token, used to swap for UBI.
      *  @param _deadline Unix timestamp after which the transaction will revert.
+     *  @param _slippageDivisor Value to calculate the slippage tolerance. 100 = 1%, 500 = 0,2%, 1000 = 0,1%.
      */
-    function burnUBIwithTOKEN(address _token, uint256 _deadline) external onlyBurner {
+    function burnUBIwithTOKEN(address _token, uint256 _deadline, uint256 _slippageDivisor) external onlyBurner {
         uint256 _balanceToBurn = IERC20(_token).balanceOf(address(this));
         uint256 _amountOutMinToken = currentAmountOutMinToken[_token];
+        require(_slippageDivisor >= 100, "Max 1% slippage tolerance");
         // 0.1% less to avoid tx failure due to price decrease between request and approval
-        uint256 _amountOutMinToUseToken = _amountOutMinToken - (_amountOutMinToken / 1000);
+        uint256 _amountOutMinToUseToken = _amountOutMinToken - (_amountOutMinToken / _slippageDivisor);
         address _burnRequester = currentBurnRequester;
         require(_burnRequester != msg.sender && _burnRequester != address(0));
         address[] memory _path;
