@@ -37,6 +37,7 @@ const CONTRACT_BLOCK = 13293731; //mainnet
 function WalletButton({ provider, loadWeb3Modal, logoutOfWeb3Modal }) {
 
   const [rendered, setRendered] = useState("");
+  const [isShown, setIsShown] = useState(false);
 
   const ens = useLookupAddress();
   const { account, activateBrowserWallet, deactivate, error } = useEthers();
@@ -74,6 +75,8 @@ function WalletButton({ provider, loadWeb3Modal, logoutOfWeb3Modal }) {
     <button
       type="button"
       className="nes-btn nes-pointer"
+      onMouseEnter={() => setIsShown(true)}
+      onMouseLeave={() => setIsShown(false)}
       onClick={async () => {
         if (!provider) {
           await loadWeb3Modal();
@@ -87,7 +90,8 @@ function WalletButton({ provider, loadWeb3Modal, logoutOfWeb3Modal }) {
       title={rendered === "" ? "Click to Connect" : "Disconnect Wallet"}
     >
       {rendered === "" && "Connect Wallet"}
-      {rendered !== "" && rendered}
+      {rendered !== "" && isShown === false && rendered}
+      {rendered !== "" && isShown && "Disconnect"}
     </button>
   );
 }
