@@ -182,7 +182,7 @@ contract UBIburner {
     }
 
     /// @dev UBI burn request using a Token. This stores the parameters to be used when another burner accepts. It can be called again to update the values.
-    function requestBurnUBIwithTOKEN(address[] memory _token) external onlyBurner {
+    function requestBurnUBIwithTOKEN(address[] calldata _token) external onlyBurner {
         currentBurnRequester = msg.sender;
         for (uint256 i = 0; i < _token.length; i++) {
             currentAmountOutMinToken[_token[i]] = getAmountOutMinTOKEN(_token[i]);
@@ -198,7 +198,7 @@ contract UBIburner {
      *  @param _token List of tokens for approve.
      */
 
-    function approveTokens(address[] memory _token) external onlyBurner {
+    function approveTokens(address[] calldata _token) external onlyBurner {
         for (uint256 i = 0; i < _token.length; i++) {
             IERC20(_token[i]).approve(UNISWAP_V2_ROUTER, type(uint256).max);
             emit TokenApproved(_token[i]);
@@ -229,12 +229,12 @@ contract UBIburner {
         emit Burned(_burnRequester, msg.sender, _balanceToBurn, amounts[1]);
     }
 
-    /** @dev Using the parameters stored by the requester, this function swaps one of the tokens from the contract balance for UBI and freezes on this contract.
+    /** @dev Using the parameters stored by the requester, this function swaps tokens from the contract balance for UBI and freezes on this contract.
      *  @param _token Entry token, used to swap for UBI.
      *  @param _deadline Unix timestamp after which the transaction will revert.
      *  @param _slippageDivisor Value to calculate the slippage tolerance. 100 = 1%, 500 = 0,2%, 1000 = 0,1%.
      */
-    function burnUBIwithTOKEN(address[] memory _token, uint256 _deadline, uint256 _slippageDivisor) external onlyBurner {
+    function burnUBIwithTOKEN(address[] calldata _token, uint256 _deadline, uint256 _slippageDivisor) external onlyBurner {
         address _burnRequester = currentBurnRequester;
         require(_burnRequester != msg.sender && _burnRequester != address(0));
         currentBurnRequester = address(0);
@@ -254,10 +254,7 @@ contract UBIburner {
             }
             currentAmountOutMinToken[_token[i]] = 0;
             uint256[] memory amounts = IUniswapV2Router(UNISWAP_V2_ROUTER).swapExactTokensForTokens(_balanceToBurn, _amountOutMinToUseToken, _path, address(this), _deadline);
-            if (_token[i] == WETH)
-                emit BurnedWithToken(_burnRequester, msg.sender, _token[i], _balanceToBurn, amounts[1]);
-            else
-                emit BurnedWithToken(_burnRequester, msg.sender, _token[i], _balanceToBurn, amounts[2]);
+            emit BurnedWithToken(_burnRequester, msg.sender, _token[i], _balanceToBurn, amounts[_path.length - 1]);
             
         }
     }
@@ -309,14 +306,14 @@ contract UBIburner {
         }
         uint256[] memory amountOutMins = IUniswapV2Router(UNISWAP_V2_ROUTER)
             .getAmountsOut(IERC20(_token).balanceOf(address(this)), _path);
-        return amountOutMins[2];
+        return amountOutMins[_path.length - 1];
     }
 
-    /** @dev UBI contract balance (burned UBI).
-     *  @return The amount of UBI burned.
+    /** @dev Token contract balance.
+     *  @return The amount of Token balance in the contract.
      */
-    function UBIburned() external view returns (uint256) {
-        return IERC20(UBI).balanceOf(address(this));
+    function TokenBalance(address _token) external view returns (uint256) {
+        return IERC20(_token).balanceOf(address(this));
     }
 
     /* Fallback Function */
