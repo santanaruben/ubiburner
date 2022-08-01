@@ -64,11 +64,11 @@ contract UBIburner {
     event BurnerAdded(address burner);
     event BurnerRemoved(address burner);
     event Received(address indexed from, uint256 amount);
-    event BurnUBIRequested(address requester, uint256 UBIAmount);
-    event BurnUBIRequestedToken(address requester, address token, uint256 UBIAmount);
+    event BurnUBIWithETHRequested(address indexed requester, uint256 UBIAmount);
+    event BurnUBIWithTokenRequested(address indexed requester, address indexed token, uint256 UBIAmount);
     event TokenApproved(address token);
-    event Burned(address requester, address burner, uint256 amount, uint256 burned);
-    event BurnedWithToken(address requester, address burner, address token, uint256 amount, uint256 burned);
+    event BurnedWithETH(address indexed requester, address indexed burner, uint256 amount, uint256 burned);
+    event BurnedWithToken(address indexed requester, address indexed burner, address indexed token, uint256 amount, uint256 burned);
 
     /* Constants */
 
@@ -171,22 +171,24 @@ contract UBIburner {
                 requestBurnerRemovalMap[_requester][_burnerToRemove]
         );
         requestBurnerRemovalMap[_requester][_burnerToRemove] = false;
-        isBurner[_burnerToRemove] = false;
+        removeBurner(_burnerToRemove);
     }
 
     /// @dev UBI burn request. This stores the parameters to be used when another burner accepts. It can be called again to update the values.
     function requestBurnUBI() external onlyBurner {
         currentAmountOutMin = getAmountOutMin();
         currentBurnRequester = msg.sender;
-        emit BurnUBIRequested(msg.sender, currentAmountOutMin);
+        emit BurnUBIWithETHRequested(msg.sender, currentAmountOutMin);
     }
 
-    /// @dev UBI burn request using a Token. This stores the parameters to be used when another burner accepts. It can be called again to update the values.
-    function requestBurnUBIwithTOKEN(address[] calldata _token) external onlyBurner {
+    /** @dev UBI burn request using a list of tokens. This stores the parameters to be used when another burner accepts. It can be called again to update the values.
+     *  @param _tokens List of tokens selected to perform the burn.
+     */
+    function requestBurnUBIwithTOKENS(address[] calldata _tokens) external onlyBurner {
         currentBurnRequester = msg.sender;
-        for (uint256 i = 0; i < _token.length; i++) {
-            currentAmountOutMinToken[_token[i]] = getAmountOutMinTOKEN(_token[i]);
-            emit BurnUBIRequestedToken(msg.sender, _token[i], currentAmountOutMinToken[_token[i]]);
+        for (uint256 i = 0; i < _tokens.length; i++) {
+            currentAmountOutMinToken[_tokens[i]] = getAmountOutMinTOKEN(_tokens[i]);
+            emit BurnUBIWithTokenRequested(msg.sender, _tokens[i], currentAmountOutMinToken[_tokens[i]]);
         }
     }
 
@@ -195,13 +197,13 @@ contract UBIburner {
     // ************************ //
 
     /** @dev To exchange other tokens we need to approve each one in their respective contracts, and assign the UNISWAP_V2_ROUTER as an authorized spender on behalf of this contract.
-     *  @param _token List of tokens for approve.
+     *  @param _tokens List of tokens for approve.
      */
 
-    function approveTokens(address[] calldata _token) external onlyBurner {
-        for (uint256 i = 0; i < _token.length; i++) {
-            IERC20(_token[i]).approve(UNISWAP_V2_ROUTER, type(uint256).max);
-            emit TokenApproved(_token[i]);
+    function approveTokens(address[] calldata _tokens) external onlyBurner {
+        for (uint256 i = 0; i < _tokens.length; i++) {
+            IERC20(_tokens[i]).approve(UNISWAP_V2_ROUTER, type(uint256).max);
+            emit TokenApproved(_tokens[i]);
         }
     }
 
@@ -226,35 +228,35 @@ contract UBIburner {
         uint256[] memory amounts = IUniswapV2Router(UNISWAP_V2_ROUTER).swapExactETHForTokens{
             value: _balanceToBurn
         }(_amountOutMinToUse, path, address(this), _deadline);
-        emit Burned(_burnRequester, msg.sender, _balanceToBurn, amounts[1]);
+        emit BurnedWithETH(_burnRequester, msg.sender, _balanceToBurn, amounts[1]);
     }
 
     /** @dev Using the parameters stored by the requester, this function swaps tokens from the contract balance for UBI and freezes on this contract.
-     *  @param _token Entry token, used to swap for UBI.
+     *  @param _tokens List of entry tokens, used to swap for UBI.
      *  @param _deadline Unix timestamp after which the transaction will revert.
      *  @param _slippageDivisor Value to calculate the slippage tolerance. 100 = 1%, 500 = 0,2%, 1000 = 0,1%.
      */
-    function burnUBIwithTOKEN(address[] calldata _token, uint256 _deadline, uint256 _slippageDivisor) external onlyBurner {
+    function burnUBIwithTOKENS(address[] calldata _tokens, uint256 _deadline, uint256 _slippageDivisor) external onlyBurner {
         address _burnRequester = currentBurnRequester;
         require(_burnRequester != msg.sender && _burnRequester != address(0));
         currentBurnRequester = address(0);
-        for (uint256 i = 0; i < _token.length; i++) {
-            uint256 _balanceToBurn = IERC20(_token[i]).balanceOf(address(this));
-            uint256 _amountOutMinToken = currentAmountOutMinToken[_token[i]];
+        for (uint256 i = 0; i < _tokens.length; i++) {
+            uint256 _balanceToBurn = IERC20(_tokens[i]).balanceOf(address(this));
+            uint256 _amountOutMinToken = currentAmountOutMinToken[_tokens[i]];
             require(_slippageDivisor >= 100, "Max 1% slippage tolerance");
             // Max 1% slippage tolerance
             uint256 _amountOutMinToUseToken = _amountOutMinToken - (_amountOutMinToken / _slippageDivisor);
             address[] memory _path;
-            if (_token[i] == WETH) _path = path;
+            if (_tokens[i] == WETH) _path = path;
             else {
                 _path = new address[](3);
-                _path[0] = _token[i];
+                _path[0] = _tokens[i];
                 _path[1] = WETH;
                 _path[2] = UBI;
             }
-            currentAmountOutMinToken[_token[i]] = 0;
+            currentAmountOutMinToken[_tokens[i]] = 0;
             uint256[] memory amounts = IUniswapV2Router(UNISWAP_V2_ROUTER).swapExactTokensForTokens(_balanceToBurn, _amountOutMinToUseToken, _path, address(this), _deadline);
-            emit BurnedWithToken(_burnRequester, msg.sender, _token[i], _balanceToBurn, amounts[_path.length - 1]);
+            emit BurnedWithToken(_burnRequester, msg.sender, _tokens[i], _balanceToBurn, amounts[_path.length - 1]);
             
         }
     }
